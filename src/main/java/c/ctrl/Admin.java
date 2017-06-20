@@ -11,6 +11,7 @@ import c.models.ParameterSimpleModel;
 import c.models.ParameterSimpleModelList;
 import c.util.FileUtil;
 import c.util.PropertiesUtil;
+import c.util.SystemUtil;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -192,10 +193,8 @@ public class Admin {
 
     @RequestMapping("/download")
     public String download(HttpServletRequest request, HttpServletResponse response) {
-        PropertiesUtil propertiesUtil = new PropertiesUtil("application.properties");
-        String path = propertiesUtil.getValueByKey("file_save_path");
-        String fileName = "test.jpg";
-        File file = new File(path + fileName);
+        String fileName = "test.png";
+        File file = new File(SystemUtil.getRootPath(request) + "attachments\\" + fileName);
         if (file.exists()) {
             response.setContentType("application/force-download");// 设置强制下载不打开
             response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
