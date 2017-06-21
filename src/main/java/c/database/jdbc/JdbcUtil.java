@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package c.jdbc;
+package c.database.jdbc;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

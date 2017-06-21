@@ -35,7 +35,10 @@
     <!--4. 设定配置文件列表 设置全局参数 为3的参数配置信息-->
     <context-param>  
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:application-context.xml</param-value>  
+        <param-value>
+            classpath:application-context.xml,
+            classpath:connection-context.xml
+        </param-value>  
     </context-param>
     <!--5. 编码字符集统一为UTF-8（过滤器）-->
     <filter>

@@ -24,5 +24,13 @@
           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
 ">
-    
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+                <value>classpath:connection.properties</value>
+                <value>classpath:wxconfig.properties</value>
+            </list>
+        </property> 
+    </bean>
 </beans>

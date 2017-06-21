@@ -5,6 +5,8 @@
  */
 package c.ctrl;
 
+import c.database.jdbctemplate.JdbcTemplateUtil;
+import c.database.models.JdbcDataModel;
 import c.models.ParameterComplexModel;
 import c.models.ParameterComplexModelList;
 import c.models.ParameterSimpleModel;
@@ -17,9 +19,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +44,28 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 @Controller
 @RequestMapping("/admin")
 public class Admin {
+
+    @Autowired
+    @Qualifier("jdbcTemplateUtil")
+    private JdbcTemplateUtil jdbcTemplateUtil;
+
+    @RequestMapping("/login")
+    public String login(HttpServletRequest request, @RequestParam("redirectUrl") String redirectUrl, @RequestParam("username") String username, @RequestParam("password") String password) {
+        if (username.equals("1") && password.equals("1")) {
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("user", "loginsuccess");
+            return "redirect:" + (redirectUrl == null || redirectUrl.isEmpty() ? "/c/admin/index" : redirectUrl);
+        } else {
+            return "redirect:/views/admin/login.jsp?redirectUrl=" + (redirectUrl == null || redirectUrl.isEmpty() ? "" : redirectUrl);
+        }
+    }
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        httpSession.removeAttribute("user");
+        return "redirect:/views/admin/login.jsp";
+    }
 
     @RequestMapping("/index")
     public String index() {
@@ -214,5 +242,12 @@ public class Admin {
             }
         }
         return null;
+    }
+
+    @RequestMapping("/jdbctemplate")
+    public @ResponseBody
+    List jdbctemplate() {
+        List<JdbcDataModel> ls = this.jdbcTemplateUtil.getJdbcDataModelList();
+        return ls;
     }
 }
