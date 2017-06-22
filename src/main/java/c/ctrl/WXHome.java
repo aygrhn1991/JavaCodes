@@ -7,10 +7,14 @@ package c.ctrl;
 
 import c.util.DataTransferUtil;
 import c.util.HttpUtil;
+import c.util.SystemUtil;
 import c.wx.accesstoken.AccessTokenUtil;
 import c.wx.config.WXConfigModel;
 import c.wx.configuration.ConfigurationUtil;
+import c.wx.jssdk.JsApiTicketUtil;
+import c.wx.jssdk.JsSdkUtil;
 import c.wx.messagemanagement.MessageUtil;
+import c.wx.models.jssdk.JsSdkConfigModel;
 import c.wx.models.oauth.OAuthUserAccessTokenModel;
 import c.wx.models.oauth.OAuthUserInfoModel;
 import c.wx.models.user.UserInfoModel;
@@ -76,10 +80,27 @@ public class WXHome {
         return "result";
     }
 
+    @RequestMapping("/jssdk")
+    public String jssdk() {
+        return "wx/jssdk";
+    }
+
+    @RequestMapping("/jssdkconfig")
+    public @ResponseBody
+    JsSdkConfigModel jssdkconfig(HttpServletRequest request) {
+        String url = request.getParameter("url");
+        JsSdkConfigModel model = new JsSdkConfigModel();
+        model.appId = WXConfigModel.getAppId();
+        model.timestamp = System.currentTimeMillis() / 1000;
+        model.nonceStr = SystemUtil.getRandomString(36);
+        model.signature = JsSdkUtil.getSignature(model.nonceStr, String.valueOf(model.timestamp), url);
+        return model;
+    }
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public @ResponseBody
     String test(HttpServletRequest request) {
-        String at=AccessTokenUtil.getAccesstToken();
+        
         return "result";
     }
 }

@@ -24,7 +24,7 @@ public class AccessTokenUtil {
             requestAccesstToken();
             access_token = PROPERTIES_UTIL.getValueByKey("access_token");
         } else {
-            String expires_in = PROPERTIES_UTIL.getValueByKey("expires_in");
+            String expires_in = PROPERTIES_UTIL.getValueByKey("access_token_expires_in");
             String access_token_gettime = PROPERTIES_UTIL.getValueByKey("access_token_gettime");
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
@@ -48,6 +48,8 @@ public class AccessTokenUtil {
         Map<String, String> map = DataTransferUtil.jsonToMap(response);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         map.put("access_token_gettime", formatter.format(new Date()));
+        map.put("access_token_expires_in", map.get("expires_in"));
+        map.remove("expires_in");
         PROPERTIES_UTIL.setValues(map);
     }
 }
