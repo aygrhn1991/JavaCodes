@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package c.wx.messagemanagement;
+package c.wx.management.message;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -33,6 +33,21 @@ public class MessageUtil {
                 break;
             case "image":
                 replyTextMessage(xmlMap, response, "image");
+                break;
+            case "voice":
+                replyTextMessage(xmlMap, response, "voice");
+                break;
+            case "video":
+                replyTextMessage(xmlMap, response, "video");
+                break;
+            case "shortvideo":
+                replyTextMessage(xmlMap, response, "shortvideo");
+                break;
+            case "location":
+                replyTextMessage(xmlMap, response, "location");
+                break;
+            case "link":
+                replyTextMessage(xmlMap, response, "link");
                 break;
             case "event":
                 replyTextMessage(xmlMap, response, "event");

@@ -7,6 +7,7 @@ package c.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -46,7 +47,7 @@ public class HttpUtil {
             connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64)");
             connection.setDoOutput(true);
             connection.setDoInput(true);
-            try (PrintWriter out = new PrintWriter(connection.getOutputStream())) {
+            try (PrintWriter out = new PrintWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))) {
                 out.print(param);
                 out.flush();
             }

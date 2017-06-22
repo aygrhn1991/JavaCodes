@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package c.wx.usermanagement;
+package c.wx.management.user;
 
 import c.wx.models.user.UserInfoModel;
 import com.google.gson.Gson;
