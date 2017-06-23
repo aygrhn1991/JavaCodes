@@ -56,9 +56,11 @@ public class WXHome {
             return ConfigurationUtil.checkConfiguration(WXConfigModel.getToken(), timestamp, nonce, signature) ? echostr : null;
         } else {
             try {
-                InputStream stream = request.getInputStream();
-                Map<String, String> xmlMap = DataTransferUtil.xmlToMap(stream);
-                MessageUtil.messageAndEventHandler(xmlMap, response);
+                try (InputStream stream = request.getInputStream()) {
+                    String xml = DataTransferUtil.streamToString(stream);
+                    Map<String, String> xmlMap = DataTransferUtil.xmlToMap(xml, false);
+                    MessageUtil.messageAndEventHandler(xmlMap, response);
+                }
             } catch (Exception e) {
                 System.out.println(e);
             }

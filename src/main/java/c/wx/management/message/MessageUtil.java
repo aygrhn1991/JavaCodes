@@ -5,20 +5,13 @@
  */
 package c.wx.management.message;
 
+import c.util.DataTransferUtil;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import c.wx.config.WXConfigModel;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
 
 public class MessageUtil {
 
@@ -59,37 +52,17 @@ public class MessageUtil {
 
     public static void replyTextMessage(Map<String, String> xmlMap, HttpServletResponse response, String replyMessage) {
         try {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            Document document = builder.newDocument();
-            Element root = document.createElement("xml");
-            document.appendChild(root);
-            Element toUserName = document.createElement("ToUserName");
-            toUserName.setTextContent(xmlMap.get("FromUserName"));
-            root.appendChild(toUserName);
-            Element fromUserName = document.createElement("FromUserName");
-            fromUserName.setTextContent(WXConfigModel.getPlatformWechatNumber());
-            root.appendChild(fromUserName);
-            Element createTime = document.createElement("CreateTime");
-            createTime.setTextContent(String.valueOf(System.currentTimeMillis()));
-            root.appendChild(createTime);
-            Element msgType = document.createElement("MsgType");
-            msgType.setTextContent("text");
-            root.appendChild(msgType);
-            Element content = document.createElement("Content");
-            content.setTextContent(replyMessage);
-            root.appendChild(content);
-
+            Map<String, Object> map = new HashMap<>();
+            map.put("ToUserName", xmlMap.get("FromUserName"));
+            map.put("FromUserName", WXConfigModel.getPlatformWechatNumber());
+            map.put("CreateTime", String.valueOf(System.currentTimeMillis()));
+            map.put("MsgType", "text");
+            map.put("Content", replyMessage);
+            String xml = DataTransferUtil.mapToXml(map, "xml");
             response.setCharacterEncoding("UTF-8");
-            TransformerFactory tff = TransformerFactory.newInstance();
-            Transformer tf = tff.newTransformer();
-            tf.setOutputProperty(OutputKeys.ENCODING, "gb2312");
-            tf.setOutputProperty(OutputKeys.INDENT, "yes");
-            try (StringWriter sWriter = new StringWriter()) {
-                tf.transform(new DOMSource(document), new StreamResult(sWriter));
-                try (PrintWriter pWriter = response.getWriter()) {
-                    pWriter.write(sWriter.toString());
-                }
+            try (PrintWriter out = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"))) {
+                out.print(xml);
+                out.flush();
             }
         } catch (Exception e) {
             System.out.println(e);
