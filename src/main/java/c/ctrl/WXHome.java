@@ -11,27 +11,25 @@ import c.util.SystemUtil;
 import c.wx.config.WXConfigModel;
 import c.wx.configuration.ConfigurationUtil;
 import c.wx.jssdk.JsSdkUtil;
+import c.wx.management.menu.MenuTypeEnum;
 import c.wx.management.menu.MenuUtil;
 import c.wx.management.message.MessageUtil;
-import c.wx.models.jssdk.JsSdkConfigModel;
-import c.wx.models.oauth.OAuthUserAccessTokenModel;
-import c.wx.models.oauth.OAuthUserInfoModel;
-import c.wx.models.user.UserInfoModel;
 import c.wx.oauth.OAuthScopeEnum;
 import c.wx.oauth.OAuthUtil;
 import c.wx.management.user.UserUtil;
+import c.wx.models.jssdk.JsSdkConfigModel;
 import c.wx.models.menu.ButtonGroupModel;
 import c.wx.models.menu.ButtonModel;
 import c.wx.models.menu.MenuModel;
+import c.wx.models.oauth.OAuthUserAccessTokenModel;
+import c.wx.models.oauth.OAuthUserInfoModel;
+import c.wx.models.user.UserInfoModel;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.ButtonGroup;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -108,11 +106,11 @@ public class WXHome {
     public @ResponseBody
     String test(HttpServletRequest request) {
 
-        ButtonModel b1 = new ButtonModel("aaa", "click", "V1001_TODAY_MUSIC", null, null, null, null);
-        ButtonModel b2 = new ButtonModel("bbb", "view", null, "http://www.soso.com/", null, null, null);
-        ButtonModel b3 = new ButtonModel("ccc", "scancode_push", "rselfmenu_0_1", null, null, null, null);
-        ButtonModel b4 = new ButtonModel("ddd", "pic_weixin", "rselfmenu_1_2", null, null, null, null);
-        ButtonModel b5 = new ButtonModel("eee", "location_select", "rselfmenu_2_0", null, null, null, null);
+        ButtonModel b1 = new ButtonModel("aaa", MenuTypeEnum.click, "V1001_TODAY_MUSIC", null, null, null, null);
+        ButtonModel b2 = new ButtonModel("bbb", MenuTypeEnum.view, null, "http://www.soso.com/", null, null, null);
+        ButtonModel b3 = new ButtonModel("ccc", MenuTypeEnum.scancode_push, "rselfmenu_0_1", null, null, null, null);
+        ButtonModel b4 = new ButtonModel("ddd", MenuTypeEnum.pic_weixin, "rselfmenu_1_2", null, null, null, null);
+        ButtonModel b5 = new ButtonModel("eee", MenuTypeEnum.location_select, "rselfmenu_2_0", null, null, null, null);
 
         ButtonGroupModel g1 = new ButtonGroupModel("g1", b1, b2);
         ButtonGroupModel g2 = new ButtonGroupModel("g2", b3, b4);

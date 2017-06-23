@@ -5,6 +5,7 @@
  */
 package c.wx.models.menu;
 
+import c.wx.management.menu.MenuTypeEnum;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 public class ButtonBase {
 
     public String name;
-    public String type;
+    public MenuTypeEnum type;
     public String key;
     public String url;
     public String media_id;

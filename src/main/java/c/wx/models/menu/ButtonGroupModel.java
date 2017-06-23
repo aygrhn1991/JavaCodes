@@ -6,7 +6,6 @@
 package c.wx.models.menu;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

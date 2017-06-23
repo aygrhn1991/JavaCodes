@@ -5,7 +5,7 @@
  */
 package c.wx.models.menu;
 
-import java.util.List;
+import c.wx.management.menu.MenuTypeEnum;
 
 /**
  *
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ButtonModel extends ButtonBase {
 
-    public ButtonModel(String name, String type, String key, String url, String media_id, String appid, String pagepath) {
+    public ButtonModel(String name, MenuTypeEnum type, String key, String url, String media_id, String appid, String pagepath) {
         this.name = name;
         this.type = type;
         this.key = key;
