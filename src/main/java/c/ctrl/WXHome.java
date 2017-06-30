@@ -23,7 +23,10 @@ import c.wx.models.menu.ButtonModel;
 import c.wx.models.menu.MenuModel;
 import c.wx.models.oauth.OAuthUserAccessTokenModel;
 import c.wx.models.oauth.OAuthUserInfoModel;
+import c.wx.models.pay.UnifiedOrderModel;
 import c.wx.models.user.UserInfoModel;
+import c.wx.pay.PayUtil;
+import c.wx.pay.UnifiedOrderTradeTypeEnum;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -102,15 +105,35 @@ public class WXHome {
         return model;
     }
 
+    @RequestMapping(value = "/pay", method = RequestMethod.GET)
+    public @ResponseBody
+    String pay(HttpServletRequest request) {
+        UnifiedOrderModel model = new UnifiedOrderModel();
+        model.appid = WXConfigModel.getAppId();
+        model.body = "testbody";
+        model.mch_id = WXConfigModel.getMch_id();
+        model.nonce_str = SystemUtil.getRandomString(30);
+        model.notify_url = HttpUtil.getCurrentBaseUrlWithoutPort(request) + "/c/wxhome/paycallback";
+        model.openid = "oUpF8uMuAJO_M2pxb1Q9zNjWeS6o";
+        model.out_trade_no = "201706301012001";
+        model.spbill_create_ip = "192.168.1.1";
+        model.total_fee = 1;
+        model.trade_type = UnifiedOrderTradeTypeEnum.JSAPI;
+        String sign = PayUtil.getSignature(model);
+        model.sign = sign;
+        String prepay_id = PayUtil.getPrepay_id(model);
+        return "result";
+    }
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public @ResponseBody
     String test(HttpServletRequest request) {
 
-        ButtonModel b1 = new ButtonModel("aaa", MenuTypeEnum.click, "V1001_TODAY_MUSIC", null, null, null, null);
-        ButtonModel b2 = new ButtonModel("bbb", MenuTypeEnum.view, null, "http://www.soso.com/", null, null, null);
-        ButtonModel b3 = new ButtonModel("ccc", MenuTypeEnum.scancode_push, "rselfmenu_0_1", null, null, null, null);
-        ButtonModel b4 = new ButtonModel("ddd", MenuTypeEnum.pic_weixin, "rselfmenu_1_2", null, null, null, null);
-        ButtonModel b5 = new ButtonModel("eee", MenuTypeEnum.location_select, "rselfmenu_2_0", null, null, null, null);
+        ButtonModel b1 = new ButtonModel("aaa1", MenuTypeEnum.click, "V1001_TODAY_MUSIC", null, null, null, null);
+        ButtonModel b2 = new ButtonModel("bbb1", MenuTypeEnum.view, null, "http://www.soso.com/", null, null, null);
+        ButtonModel b3 = new ButtonModel("ccc1", MenuTypeEnum.scancode_push, "rselfmenu_0_1", null, null, null, null);
+        ButtonModel b4 = new ButtonModel("ddd1", MenuTypeEnum.pic_weixin, "rselfmenu_1_2", null, null, null, null);
+        ButtonModel b5 = new ButtonModel("eee1", MenuTypeEnum.location_select, "rselfmenu_2_0", null, null, null, null);
 
         ButtonGroupModel g1 = new ButtonGroupModel("g1", b1, b2);
         ButtonGroupModel g2 = new ButtonGroupModel("g2", b3, b4);

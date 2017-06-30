@@ -6,7 +6,7 @@
 package c.ctrl;
 
 import c.util.DataTransferUtil;
-import c.wx.models.pay.PayModel;
+import c.wx.models.pay.UnifiedOrderModel;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -30,11 +30,11 @@ public class Test {
     @RequestMapping("/test")
     public @ResponseBody
     String test(HttpServletRequest request) {
-//        PayModel m = new PayModel();
+//        UnifiedOrderModel m = new UnifiedOrderModel();
 //        m.simple_id = 10;
 //        m.simple_name = "bob";
-//        String str = DataTransferUtil.objectToXml(m, PayModel.class);
-//        PayModel mm=(PayModel)DataTransferUtil.xmlToObject(str,PayModel.class);
+//        String str = DataTransferUtil.objectToXml(m, UnifiedOrderModel.class);
+//        UnifiedOrderModel mm=(UnifiedOrderModel)DataTransferUtil.xmlToObject(str,UnifiedOrderModel.class);
         Map m = new HashMap();
         m.put("aaa", "bbb");
         m.put("ccc", 123);

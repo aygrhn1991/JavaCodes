@@ -27,6 +27,12 @@ public class WXConfigModel {
     public static String getPlatformWechatNumber() {
         return PROPERTIES_UTIL.getValueByKey("platform_wechat_num");
     }
+    public static String getMch_id() {
+        return PROPERTIES_UTIL.getValueByKey("mch_id");
+    }
+    public static String getMch_key() {
+        return PROPERTIES_UTIL.getValueByKey("mch_key");
+    }
 
     public static String getValueByKey(String key) {
         return PROPERTIES_UTIL.getValueByKey(key);

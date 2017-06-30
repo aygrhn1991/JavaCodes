@@ -12,6 +12,14 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 public class HttpUtil {
 
@@ -45,6 +53,7 @@ public class HttpUtil {
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64)");
+            connection.setRequestProperty("Content-Type", "text/xml");
             connection.setDoOutput(true);
             connection.setDoInput(true);
             try (PrintWriter out = new PrintWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))) {
@@ -76,6 +85,23 @@ public class HttpUtil {
     public static String getCurrentBaseUrlWithoutPort(HttpServletRequest request) {
         try {
             return request.getScheme() + "://" + request.getServerName() + request.getContextPath();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public static String HttpClient_Post(String url, String param) {
+        try {
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpPost httpPost = new HttpPost(url);
+            RequestConfig requestConfig = RequestConfig.custom().build();
+            httpPost.setConfig(requestConfig);
+            StringEntity postEntity = new StringEntity(param, "UTF-8");
+            httpPost.setEntity(postEntity);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            return EntityUtils.toString(httpEntity, "UTF-8");
         } catch (Exception e) {
             System.out.println(e);
         }
