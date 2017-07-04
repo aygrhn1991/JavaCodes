@@ -31,12 +31,6 @@ public class Test {
     @RequestMapping("/test")
     public @ResponseBody
     String test(HttpServletRequest request) {
-        Logger logger = Logger.getLogger(Test.class);
-        logger.debug("this is a debug message");
-        logger.info("this is a info message");
-        logger.warn("this is a warn message");
-        logger.error("this is a error message");
-        logger.fatal("this is a fatal message");
         return "test";
     }
 }
