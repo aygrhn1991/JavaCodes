@@ -6,6 +6,7 @@
 package c.wx.jssdk;
 
 import c.util.SHA1;
+import c.wx.models.jssdk.JsSdkConfigModel;
 import java.util.Arrays;
 
 /**
@@ -14,8 +15,8 @@ import java.util.Arrays;
  */
 public class JsSdkUtil {
 
-    public static String getSignature(String noncestr, String timestamp, String url) {
-        String[] strArray = new String[]{"noncestr=" + noncestr, "jsapi_ticket=" + JsApiTicketUtil.getJsApiTicket(), "timestamp=" + timestamp, "url=" + url};
+    public static String getSignature(JsSdkConfigModel model, String url) {
+        String[] strArray = new String[]{"noncestr=" + model.nonceStr, "jsapi_ticket=" + JsApiTicketUtil.getJsApiTicket(), "timestamp=" + model.timestamp, "url=" + url};
         Arrays.sort(strArray);
         String strResult = SHA1.getSha1(strArray[0] + "&" + strArray[1] + "&" + strArray[2] + "&" + strArray[3]);
         return strResult;

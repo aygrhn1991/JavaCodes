@@ -10,6 +10,7 @@ import c.wx.models.pay.UnifiedOrderModel;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,16 +31,12 @@ public class Test {
     @RequestMapping("/test")
     public @ResponseBody
     String test(HttpServletRequest request) {
-//        UnifiedOrderModel m = new UnifiedOrderModel();
-//        m.simple_id = 10;
-//        m.simple_name = "bob";
-//        String str = DataTransferUtil.objectToXml(m, UnifiedOrderModel.class);
-//        UnifiedOrderModel mm=(UnifiedOrderModel)DataTransferUtil.xmlToObject(str,UnifiedOrderModel.class);
-        Map m = new HashMap();
-        m.put("aaa", "bbb");
-        m.put("ccc", 123);
-        String str = DataTransferUtil.mapToJson(m);
-        Map mm = DataTransferUtil.jsonToMap(str);
+        Logger logger = Logger.getLogger(Test.class);
+        logger.debug("this is a debug message");
+        logger.info("this is a info message");
+        logger.warn("this is a warn message");
+        logger.error("this is a error message");
+        logger.fatal("this is a fatal message");
         return "test";
     }
 }

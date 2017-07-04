@@ -18,13 +18,18 @@ import c.wx.oauth.OAuthScopeEnum;
 import c.wx.oauth.OAuthUtil;
 import c.wx.management.user.UserUtil;
 import c.wx.models.jssdk.JsSdkConfigModel;
+import c.wx.models.jssdk.JsSdkPayConfigModel;
 import c.wx.models.menu.ButtonGroupModel;
 import c.wx.models.menu.ButtonModel;
 import c.wx.models.menu.MenuModel;
 import c.wx.models.oauth.OAuthUserAccessTokenModel;
 import c.wx.models.oauth.OAuthUserInfoModel;
+import c.wx.models.pay.PayCallBackModel;
+import c.wx.models.pay.PayResultResponseModel;
 import c.wx.models.pay.UnifiedOrderModel;
 import c.wx.models.user.UserInfoModel;
+import c.wx.pay.PayResultEnum;
+import c.wx.pay.PaySignTypeEnum;
 import c.wx.pay.PayUtil;
 import c.wx.pay.UnifiedOrderTradeTypeEnum;
 import java.io.InputStream;
@@ -101,13 +106,13 @@ public class WXHome {
         model.appId = WXConfigModel.getAppId();
         model.timestamp = System.currentTimeMillis() / 1000;
         model.nonceStr = SystemUtil.getRandomString(36);
-        model.signature = JsSdkUtil.getSignature(model.nonceStr, String.valueOf(model.timestamp), url);
+        model.signature = JsSdkUtil.getSignature(model, url);
         return model;
     }
 
     @RequestMapping(value = "/pay", method = RequestMethod.GET)
     public @ResponseBody
-    String pay(HttpServletRequest request) {
+    JsSdkPayConfigModel pay(HttpServletRequest request) {
         UnifiedOrderModel model = new UnifiedOrderModel();
         model.appid = WXConfigModel.getAppId();
         model.body = "testbody";
@@ -119,25 +124,47 @@ public class WXHome {
         model.spbill_create_ip = "192.168.1.1";
         model.total_fee = 1;
         model.trade_type = UnifiedOrderTradeTypeEnum.JSAPI;
-        String sign = PayUtil.getSignature(model);
-        model.sign = sign;
+        model.sign = PayUtil.getPrepaySignature(model);
         String prepay_id = PayUtil.getPrepay_id(model);
-        return "result";
+        JsSdkPayConfigModel m = new JsSdkPayConfigModel();
+        m.appId = WXConfigModel.getAppId();
+        m.nonceStr = SystemUtil.getRandomString(30);
+        m.pkg = "prepay_id=" + prepay_id;
+        m.signType = PaySignTypeEnum.MD5;
+        m.timeStamp = System.currentTimeMillis() / 1000;
+        m.paySign = PayUtil.getPaySignature(m);
+        return m;
+    }
+
+    @RequestMapping(value = "/paycallback", method = RequestMethod.GET)
+    public @ResponseBody
+    String paycallback(HttpServletRequest request) {
+        try {
+            String payResult = DataTransferUtil.streamToString(request.getInputStream());
+            PayCallBackModel model = (PayCallBackModel) DataTransferUtil.xmlToObject(payResult, PayCallBackModel.class);
+            if (model.return_code.equals(PayResultEnum.SUCCESS) && model.result_code.equals(PayResultEnum.SUCCESS)) {
+                PayResultResponseModel m = new PayResultResponseModel();
+                m.return_code = PayResultEnum.SUCCESS;
+                return DataTransferUtil.objectToXml(m, PayResultResponseModel.class);
+            } else {
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public @ResponseBody
     String test(HttpServletRequest request) {
-
         ButtonModel b1 = new ButtonModel("aaa1", MenuTypeEnum.click, "V1001_TODAY_MUSIC", null, null, null, null);
         ButtonModel b2 = new ButtonModel("bbb1", MenuTypeEnum.view, null, "http://www.soso.com/", null, null, null);
         ButtonModel b3 = new ButtonModel("ccc1", MenuTypeEnum.scancode_push, "rselfmenu_0_1", null, null, null, null);
         ButtonModel b4 = new ButtonModel("ddd1", MenuTypeEnum.pic_weixin, "rselfmenu_1_2", null, null, null, null);
         ButtonModel b5 = new ButtonModel("eee1", MenuTypeEnum.location_select, "rselfmenu_2_0", null, null, null, null);
-
         ButtonGroupModel g1 = new ButtonGroupModel("g1", b1, b2);
         ButtonGroupModel g2 = new ButtonGroupModel("g2", b3, b4);
-
         MenuModel m = new MenuModel(g1, g2, b5);
         MenuUtil.setMenu(m);
         return "result";

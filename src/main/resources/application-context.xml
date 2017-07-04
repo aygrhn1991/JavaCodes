@@ -30,7 +30,8 @@
                 <value>classpath:application.properties</value>
                 <value>classpath:connection.properties</value>
                 <value>classpath:wxconfig.properties</value>
+                <value>classpath:log4j.properties</value>
             </list>
-        </property> 
+        </property>
     </bean>
 </beans>

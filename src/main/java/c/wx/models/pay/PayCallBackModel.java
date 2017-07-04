@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Administrator
  */
 @XmlRootElement(name = "xml")
-public class UnifiedOrderCallBackModel {
+public class PayCallBackModel {
 
     public String return_code;
     public String return_msg;
@@ -21,10 +21,26 @@ public class UnifiedOrderCallBackModel {
     public String device_info;
     public String nonce_str;
     public String sign;
+    public String sign_type;
     public String result_code;
     public String err_code;
     public String err_code_des;
+    public String openid;
+    public String is_subscribe;
     public String trade_type;
-    public String prepay_id;
-    public String code_url;
+    public String bank_type;
+    public int total_fee;
+    public int settlement_total_fee;
+    public String fee_type;
+    public int cash_fee;
+    public String cash_fee_type;
+    public int coupon_fee;
+    public int coupon_count;
+    public String coupon_type_$n;
+    public String coupon_id_$n;
+    public int coupon_fee_$n;
+    public String transaction_id;
+    public String out_trade_no;
+    public String attach;
+    public String time_end;
 }

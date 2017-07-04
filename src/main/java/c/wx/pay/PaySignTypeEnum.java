@@ -5,8 +5,11 @@
  */
 package c.wx.pay;
 
-public enum UnifiedOrderTradeTypeEnum {
-    JSAPI,
-    NATIVE,
-    APP,
+/**
+ *
+ * @author Administrator
+ */
+public enum PaySignTypeEnum {
+    MD5,
+    SHA1,
 }
