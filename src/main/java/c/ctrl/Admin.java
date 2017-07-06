@@ -7,6 +7,9 @@ package c.ctrl;
 
 import c.database.jdbctemplate.JdbcTemplateUtil;
 import c.database.models.JdbcDataModel;
+import c.excel.ExcelSimpleUtil;
+import c.excel.ExcelUtil;
+import c.models.ExcelExportModel;
 import c.models.ParameterComplexModel;
 import c.models.ParameterComplexModelList;
 import c.models.ParameterSimpleModel;
@@ -18,6 +21,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -251,14 +256,44 @@ public class Admin {
         List<JdbcDataModel> ls = this.jdbcTemplateUtil.getJdbcDataModelList();
         return ls;
     }
+
     @RequestMapping("/log")
     public @ResponseBody
     String log() {
         Logger logger = Logger.getLogger(Admin.class);
         logger.debug("debug log");
         logger.info("info log");
-        logger.warn ("warn log") ;
+        logger.warn("warn log");
         logger.error("error log");
         return "log";
+    }
+
+    @RequestMapping("/excel")
+    public @ResponseBody
+    String excel() {
+        long a = System.currentTimeMillis();
+        String columnName[] = {"列1", "列2", "列3", "列4", "列5", "列6", "列7"};
+        String columnValue[] = {"id", "str", "bool", "date", "num1", "num2", "num3"};
+        int columnWidth[] = {12, 12, 12, 12, 12, 12, 12};
+        List<ExcelExportModel> dataList = new ArrayList();
+        for (int i = 0; i < 10; i++) {
+            ExcelExportModel m = new ExcelExportModel(i, "name" + i, true, new Date(), (long) 123456789, (float) 2.23456789, (double) 3.23456789);
+            dataList.add(m);
+        }
+        System.out.println("生成" + dataList.size() + "条数据耗时 : " + (System.currentTimeMillis() - a) / 1000f + " 秒 ");
+        long b = System.currentTimeMillis();
+        //ExcelUtil e = new ExcelUtil(System.getProperty("webapp.root"), "test.xls", "sheetA", null);
+        ExcelUtil e = new ExcelUtil("E:/", "test.xls", "sheetA", null);
+        e.writeExcel(columnName, columnValue, columnWidth, dataList);
+        System.out.println("生成excel耗时 : " + (System.currentTimeMillis() - b) / 1000f + " 秒 ");
+        return "excel";
+    }
+
+    @RequestMapping("/simpleexcel")
+    public @ResponseBody
+    String simpleExcel() {
+        List<ExcelExportModel> ls = ExcelSimpleUtil.readExcel("E:/test.xls");
+        ExcelSimpleUtil.writeExcel(ls, "E:/test2.xls");
+        return "simpleexcel";
     }
 }

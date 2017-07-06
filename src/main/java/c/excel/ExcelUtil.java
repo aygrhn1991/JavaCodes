@@ -6,22 +6,20 @@
 package c.excel;
 
 import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.text.AttributedString;
-import javafx.scene.control.Cell;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.sl.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.SheetUtil;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  *
@@ -29,127 +27,111 @@ import org.apache.poi.ss.util.SheetUtil;
  */
 public class ExcelUtil {
 
-//    public void outPutTable() {
-//        long a = System.currentTimeMillis();
-//        Connection con = null;
-//        PreparedStatement ps_struts = null;
-//        ResultSet rs_struts = null;
-//        int rowNum = 1;
-//        try {
-//            HSSFWorkbook workbook = new HSSFWorkbook();
-//            con = dataSource.getConnection();
-//            ps_struts = con.prepareStatement("select * from t_item limit 65535");
-//            rs_struts = ps_struts.executeQuery();
-//            ResultSetMetaData rsm = rs_struts.getMetaData();
-//            HSSFSheet sheet = workbook.createSheet("sheet1");
-//            int columnCount = rsm.getColumnCount();
-//            int[] cell_size = new int[columnCount];
-//            int[] max_row = new int[columnCount];
-//            HSSFRow row1 = sheet.createRow(0);
-//            for (int i = 1; i <= columnCount; i++) {
-//                String columnName = rsm.getColumnName(i);
-//                cell_size[i - 1] = columnName.getBytes().length;
-//                max_row[i - 1] = 0;
-//                HSSFCell cell1 = row1.createCell(i - 1);
-//                cell1.setCellValue(columnName);
-//            }
-//
-//            while (rs_struts.next()) {
-//                HSSFRow row = sheet.createRow(rowNum);
-//                for (int i = 0; i < columnCount; i++) {
-//                    HSSFCell cell = row.createCell(i);
-//                    // 这三句非常耗时间, 尤其是autoSizeColumn不应该在这里调用
-//                    // 上面的列是按序取的, 下面的结果按序取就一一对应了没有必要先取name再根据name取值
-////                    sheet.autoSizeColumn(i);
-////                    String columnName=rs_struts.getMetaData().getColumnName(i+1);
-////                    tempo[i]  = rs_struts.getString(columnName);
-//                    String value = rs_struts.getString(i + 1);
-//                    int byte_len = value.getBytes().length;
-//                    if (byte_len > cell_size[i]) {
-//                        cell_size[i] = byte_len;
-//                        max_row[i] = rowNum;
-//                    }
-//                    cell.setCellValue(value);
-//                }
-//                rowNum++;
-//            }
-//
-//            resize(sheet, max_row);
-//
-//            FileOutputStream fOut = new FileOutputStream("f:/temp/t_item.xls");
-//            workbook.write(fOut);
-//            fOut.flush();
-//            fOut.close();
-//        } catch (Exception e) {
-//            System.out.println("已运行 outPutTable (): " + e);
-//        } finally {
-//            if (rs_struts != null) {
-//                try {
-//                    rs_struts.close();
-//                } catch (SQLException e) {
-//                }
-//            }
-//            if (ps_struts != null) {
-//                try {
-//                    ps_struts.close();
-//                } catch (SQLException e) {
-//                }
-//            }
-//            if (con != null) {
-//                try {
-//                    con.close();
-//                } catch (SQLException e) {
-//                }
-//            }
-//        }
-//        System.out.println("-----------------表开始导出完成!-------------------");
-//        System.out.println("共计" + (rowNum - 1) + "行数据，耗时：" + (System.currentTimeMillis() - a) + "毫秒");
-//    }
-//
-//    private static final char defaultChar = '0';
-//    private static final FontRenderContext fontRenderContext = new FontRenderContext(null, true, true);
-//
-//    void resize(Sheet sheet, int[] max_row) {
-//        resize(sheet, false, max_row);
-//    }
-//
-//    void resize(Sheet sheet, boolean useMergedCells, int[] max_row) {
-//        AttributedString str;
-//        TextLayout layout;
-//
-//        Workbook wb = sheet.getWorkbook();
-//        DataFormatter formatter = new DataFormatter();
-//        Font defaultFont = wb.getFontAt((short) 0);
-//
-//        str = new AttributedString(String.valueOf(defaultChar));
-//        copyAttributes(defaultFont, str, 0, 1);
-//        layout = new TextLayout(str.getIterator(), fontRenderContext);
-//        int defaultCharWidth = (int) layout.getAdvance();
-//        for (int i = 0; i < max_row.length; i++) {
-//            Cell cell = sheet.getRow(max_row[i]).getCell(i);
-//            double width = SheetUtil.getCellWidth(cell, defaultCharWidth, formatter, useMergedCells);
-//            if (width != -1) {
-//                width *= 256;
-//                int maxColumnWidth = 255 * 256;
-//                if (width > maxColumnWidth) {
-//                    width = maxColumnWidth;
-//                }
-//            }
-//            sheet.setColumnWidth(i, (int) width);
-//        }
-//    }
-//
-//    private static void copyAttributes(Font font, AttributedString str, int startIdx, int endIdx) {
-//        str.addAttribute(TextAttribute.FAMILY, font.getFontName(), startIdx, endIdx);
-//        str.addAttribute(TextAttribute.SIZE, (float) font.getFontHeightInPoints());
-//        if (font.getBoldweight() == Font.BOLDWEIGHT_BOLD) {
-//            str.addAttribute(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD, startIdx, endIdx);
-//        }
-//        if (font.getItalic()) {
-//            str.addAttribute(TextAttribute.POSTURE, TextAttribute.POSTURE_OBLIQUE, startIdx, endIdx);
-//        }
-//        if (font.getUnderline() == Font.U_SINGLE) {
-//            str.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, startIdx, endIdx);
-//        }
-//    }
+    private String filePath = null;
+    private String fileName = null;
+    private String sheetName = null;
+    private HSSFWorkbook workbook = null;
+    private DecimalFormat decimalFormat = new DecimalFormat(".00");
+    private String[] colFormula = null;
+
+    public ExcelUtil(String filePath, String fileName, String sheetName, String[] colFormula) {
+        this.filePath = filePath;
+        this.fileName = fileName;
+        this.sheetName = sheetName;
+        this.colFormula = colFormula;
+        workbook = new HSSFWorkbook();
+    }
+
+    private CellStyle setBorder(CellStyle style, BorderStyle borderStyle) {
+        style.setBorderBottom(borderStyle);
+        style.setBorderLeft(borderStyle);
+        style.setBorderTop(borderStyle);
+        style.setBorderRight(borderStyle);
+        return style;
+    }
+
+    private CellStyle setFont(CellStyle style, String fontName, short fontSize, short color, boolean bold) {
+        HSSFFont font = workbook.createFont();
+        font.setFontHeightInPoints(fontSize);
+        font.setFontName(fontName);
+        font.setColor(color);
+        font.setBold(bold);
+        style.setFont(font);
+        return style;
+    }
+
+    public void writeExcel(String[] columnName, String[] columnValue, int[] columnWidth, List<?> dataList) {
+        Sheet sheet = workbook.createSheet(this.sheetName);
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(filePath + fileName);
+            Row titleRow = workbook.getSheet(sheetName).createRow(0);
+            HSSFCellStyle titleStyle = workbook.createCellStyle();
+            titleStyle = (HSSFCellStyle) setBorder(titleStyle, BorderStyle.NONE);
+            titleStyle = (HSSFCellStyle) setFont(titleStyle, "微软雅黑", (short) 10, (short) 0, true);
+            for (int i = 0; i < columnName.length; i++) {
+                sheet.setColumnWidth(i, columnWidth[i] * 256);
+                org.apache.poi.ss.usermodel.Cell cell = titleRow.createCell(i);
+                cell.setCellStyle(titleStyle);
+                cell.setCellValue(columnName[i]);
+            }
+            if (dataList != null && dataList.size() > 0) {
+                HSSFCellStyle dataStyle = workbook.createCellStyle();
+                dataStyle = (HSSFCellStyle) setBorder(dataStyle, BorderStyle.NONE);
+                dataStyle = (HSSFCellStyle) setFont(dataStyle, "微软雅黑", (short) 10, (short) 0, false);
+                if (columnValue.length > 0) {
+                    for (int rowIndex = 1; rowIndex <= dataList.size(); rowIndex++) {
+                        Object obj = dataList.get(rowIndex - 1);
+                        Class clsss = obj.getClass();
+                        Row dataRow = workbook.getSheet(sheetName).createRow(rowIndex);
+                        for (int columnIndex = 0; columnIndex < columnValue.length; columnIndex++) {
+                            String title = columnValue[columnIndex].trim();
+                            if (!title.isEmpty()) {
+                                String UTitle = Character.toUpperCase(title.charAt(0)) + title.substring(1, title.length());
+                                String methodName = "get" + UTitle;
+                                Method method = clsss.getDeclaredMethod(methodName);
+                                Object data = method.invoke(obj) == null ? "" : method.invoke(obj);
+                                Cell cell = dataRow.createCell(columnIndex);
+                                cell.setCellStyle(dataStyle);
+                                if (data != null) {
+                                    if (data instanceof Integer) {
+                                        cell.setCellValue((int) data);
+                                    } else if (data instanceof Long) {
+                                        cell.setCellValue((long) data);
+                                    } else if (data instanceof Float) {
+                                        cell.setCellValue(decimalFormat.format(data));
+                                    } else if (data instanceof Double) {
+                                        cell.setCellValue(decimalFormat.format(data));
+                                    } else if (data instanceof Date) {
+                                        Date date = (Date) data;
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                        cell.setCellValue(sdf.format(date));
+                                    } else if (data instanceof Boolean) {
+                                        cell.setCellValue((boolean) data);
+                                    } else {
+                                        cell.setCellValue((String) data);
+                                    }
+                                }
+                            } else if (colFormula != null) {
+                                String formula = colFormula[columnIndex].replace("@", (rowIndex + 1) + "");
+                                Cell cell = dataRow.createCell(columnIndex);
+                                cell.setCellStyle(dataStyle);
+                                cell.setCellFormula(formula);
+                            }
+                        }
+                    }
+                }
+            }
+            workbook.write(out);
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                out.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
 }
