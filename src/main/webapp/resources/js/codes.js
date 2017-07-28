@@ -2,12 +2,12 @@ var app = angular.module('admin', ['ngRoute']);
 app.run(function () {});
 app.config(function ($routeProvider) {
     $routeProvider
-            .when('/menu1', {controller: 'menu1', templateUrl: '/Codes/c/admin/menu1'})
-            .when('/menu2', {controller: 'menu2', templateUrl: '/Codes/views/admin/menu2.html'})
-            .when('/upload', {controller: 'upload', templateUrl: '/Codes/views/admin/upload.html'})
-            .when('/parameter', {controller: 'parameter', templateUrl: '/Codes/views/admin/parameter.html'})
-            .when('/image', {controller: 'image', templateUrl: '/Codes/views/admin/image.html'})
-            .when('/download', {controller: 'download', templateUrl: '/Codes/views/admin/download.html'})
+            .when('/menu1', {controller: 'menu1', templateUrl: '/JavaCodes/c/admin/menu1'})
+            .when('/menu2', {controller: 'menu2', templateUrl: '/JavaCodes/views/admin/menu2.html'})
+            .when('/upload', {controller: 'upload', templateUrl: '/JavaCodes/views/admin/upload.html'})
+            .when('/parameter', {controller: 'parameter', templateUrl: '/JavaCodes/views/admin/parameter.html'})
+            .when('/image', {controller: 'image', templateUrl: '/JavaCodes/views/admin/image.html'})
+            .when('/download', {controller: 'download', templateUrl: '/JavaCodes/views/admin/download.html'})
             .otherwise({redirectTo: '/menu1'});
 });
 app.controller('menu1', function ($scope) {
@@ -22,7 +22,7 @@ app.controller('upload', function ($scope) {
         formData.append('file', $("#input-file")[0].files[0]);
         $.ajax({
             type: "post",
-            url: "/Codes/c/admin/singlefileupload1",
+            url: "/JavaCodes/c/admin/singlefileupload1",
             contentType: false, //这个一定要写
             processData: false, //这个也一定要写
             data: formData,
@@ -40,7 +40,7 @@ app.controller('upload', function ($scope) {
         formData.append('file', $("#input-file")[0].files[0]);
         $.ajax({
             type: "post",
-            url: "/Codes/c/admin/singlefileupload2",
+            url: "/JavaCodes/c/admin/singlefileupload2",
             contentType: false, //这个一定要写
             processData: false, //这个也一定要写
             data: formData,
@@ -59,7 +59,7 @@ app.controller('upload', function ($scope) {
         formData.append('file2', $("#input-file2")[0].files[0]);
         $.ajax({
             type: "post",
-            url: "/Codes/c/admin/singletwofileupload1",
+            url: "/JavaCodes/c/admin/singletwofileupload1",
             contentType: false, //这个一定要写
             processData: false, //这个也一定要写
             data: formData,
@@ -78,7 +78,7 @@ app.controller('upload', function ($scope) {
         formData.append('file2', $("#input-file2")[0].files[0]);
         $.ajax({
             type: "post",
-            url: "/Codes/c/admin/singletwofileupload2",
+            url: "/JavaCodes/c/admin/singletwofileupload2",
             contentType: false, //这个一定要写
             processData: false, //这个也一定要写
             data: formData,
@@ -98,7 +98,7 @@ app.controller('upload', function ($scope) {
         }
         $.ajax({
             type: "post",
-            url: "/Codes/c/admin/multiplefileupload",
+            url: "/JavaCodes/c/admin/multiplefileupload",
             contentType: false, //这个一定要写
             processData: false, //这个也一定要写
             data: formData,
@@ -114,7 +114,7 @@ app.controller('upload', function ($scope) {
 });
 app.controller('parameter', function ($scope, $http) {
     $scope.simple = function () {
-        $http.post('/Codes/c/admin/parametersimplemodel', {
+        $http.post('/JavaCodes/c/admin/parametersimplemodel', {
             simple_id: 0,
             simple_name: 'tom'
         }).success(function (d) {
@@ -129,7 +129,7 @@ app.controller('parameter', function ($scope, $http) {
         for (var i = 1; i <= 3; i++) {
             list.push({simple_id: i, simple_name: 'tom' + i});
         }
-        $http.post('/Codes/c/admin/parametercomplexmodel1', {
+        $http.post('/JavaCodes/c/admin/parametercomplexmodel1', {
             complex_id: 0,
             complex_name: 'jack',
             model: model,
@@ -145,7 +145,7 @@ app.controller('parameter', function ($scope, $http) {
         for (var i = 1; i <= 3; i++) {
             model.push({simple_id: i, simple_name: 'tom' + i});
         }
-        $http.post('/Codes/c/admin/parametercomplexmodel2', {
+        $http.post('/JavaCodes/c/admin/parametercomplexmodel2', {
             model: model
         }).success(function (d) {
             d == true ? alert('ok') : alert(d);
@@ -163,7 +163,7 @@ app.controller('parameter', function ($scope, $http) {
                 list: [{simple_id: 1, simple_name: 'tom1'}, {simple_id: 2, simple_name: 'tom2'}]
             });
         }
-        $http.post('/Codes/c/admin/parametercomplexmodel3', {
+        $http.post('/JavaCodes/c/admin/parametercomplexmodel3', {
             model: model
         }).success(function (d) {
             d == true ? alert('ok') : alert(d);
@@ -257,13 +257,13 @@ app.controller('image', function ($scope, $http) {
         formData.append('file', $("#input-img")[0].files[0]);
         $.ajax({
             type: "post",
-            url: "/Codes/c/admin/imageconverter",
+            url: "/JavaCodes/c/admin/imageconverter",
             contentType: false, //这个一定要写
             processData: false, //这个也一定要写
             data: formData,
             dataType: 'text', //返回类型，有json，text，HTML。这里并没有jsonp格式，所以别妄想能用jsonp做跨域了。
             success: function (d) {
-                $('#callback-img').attr('src', d.simple_name);
+                $('#callback-img').attr('src', d);
             },
             error: function () {
                 alert('http错误');

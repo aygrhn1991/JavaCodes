@@ -9,7 +9,7 @@
         <title>login</title>
     </head>
     <body>
-        <form action="/Codes/c/admin/login?redirectUrl=<%=redirectUrl == null || redirectUrl.isEmpty() ? "" : redirectUrl%>" method="post">
+        <form action="/JavaCodes/c/admin/login?redirectUrl=<%=redirectUrl == null || redirectUrl.isEmpty() ? "" : redirectUrl%>" method="post">
             用户名：<input type="text" name="username" /><br/>
             密码：<input type="password" name="password" /><br/>
             <button type="submit">登录</button>
